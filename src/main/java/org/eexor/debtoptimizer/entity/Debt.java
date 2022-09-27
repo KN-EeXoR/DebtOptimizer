@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Debt implements Comparable<Debt> {
-    private int id = -1;
-    private String name;
+public class Debt extends Deposit  {
+    
     private double debt;
-    private double interest;
     private double min_pay;
 
     /**
@@ -45,7 +43,7 @@ public class Debt implements Comparable<Debt> {
      * @param money the amount of money we can spend
      * @return the rest of the money we have left
      */
-    public double pay_back(double money){
+    public double pay(double money){
         this.debt -= money;
         if(this.debt <0){
             double wynik = this.debt * -1;
@@ -73,40 +71,10 @@ public class Debt implements Comparable<Debt> {
     public double min_paymanet(){
         return this.min_pay;
     }
-    /** Returns the increment of debt
-     * @return
-     */
-    public double interest(){
-        return this.interest;
-    }
-    /** Returns the name of the debt
-     * @return 
-     */
-    public String name(){
-        return this.name;
-    }
-    @Override
-    public int compareTo(Debt o) {
-        if(this.interest > o.interest)
-            return -1;
-        else if(this.interest == o.interest)
-            return 0;
-        else return 1;
-    }
-    @Override
-    public boolean equals(Object obj) {
-        
-        return this.name == ((Debt)obj).name;
-    }
+    
     @Override
     public String toString() {
         return this.name + " to pay " + this.debt + " with interest " + this.interest +"% at minimum payment " +this.min_pay;
     }
-    private double round_decimal(double number){
-        return (double)Math.round(number*100)/100;
-    }
-    @Override
-    public int hashCode() {
-        return this.name.hashCode();
-    }
+    
 }
