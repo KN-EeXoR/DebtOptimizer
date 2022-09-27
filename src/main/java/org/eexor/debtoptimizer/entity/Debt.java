@@ -1,10 +1,16 @@
 package org.eexor.debtoptimizer.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Debt implements Comparable<Debt> {
+    private int id = -1;
     private String name;
     private double debt;
     private double interest;
@@ -16,7 +22,7 @@ public class Debt implements Comparable<Debt> {
      * @param interest annual increase in the amount
      * @param min_paymanet minimum monthly payment
      */
-    Debt(String name, double debt, double interest, double min_paymanet) {
+    public Debt(String name, double debt, double interest, double min_paymanet) {
         this.min_pay = min_paymanet;
         this.name = name;
         this.debt = debt;
@@ -28,7 +34,7 @@ public class Debt implements Comparable<Debt> {
      * @param debt The amount of money you have to pay back
      * @param interest annual increase in the amount
      */
-    Debt(String name, double debt, double interest) {
+    public Debt(String name, double debt, double interest) {
         this.min_pay = (debt - (debt /(interest+1)))/12;
         this.name = name;
         this.debt = debt;
