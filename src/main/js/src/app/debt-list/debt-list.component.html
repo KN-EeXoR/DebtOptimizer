@@ -1,0 +1,21 @@
+<div class="card my-5">
+  <div class="card-body">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Principal</th>
+          <th scope="col">Interest</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let debt of debts">
+          <td>{{ debt.name }}</td>
+          <td>{{ debt.principal }}</td>
+          <td>{{ debt.interest }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
