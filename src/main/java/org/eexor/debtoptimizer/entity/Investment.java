@@ -2,6 +2,7 @@ package org.eexor.debtoptimizer.entity;
 
 public class Investment extends Deposit {
     private double transferred;
+    private double earned;
     private double max_pay;
 
     public Investment(String name, double interest, double max_pay) {
@@ -28,19 +29,25 @@ public class Investment extends Deposit {
     }
     public void charge_interest(){
         transferred *=(this.interest+1);
+        transferred = round_decimal(transferred);
     }
     public double what_transferred(){
         return this.transferred;
     }
+    public double earned(){
+        return this.earned;
+    }
     public double payout(){
         double money = this.transferred;
+        this.earned += this.transferred;
         this.transferred = 0;
         return money;
     }
     @Override
     public String toString() {
-        return this.name + " transferred " + this.transferred + " with interest " + this.interest +"% with maxim at " +this.max_pay;
+        return this.name + " earned " + this.earned + " with interest " + this.interest +"% with maxim at " +this.max_pay;
     }
     
     
 }
+

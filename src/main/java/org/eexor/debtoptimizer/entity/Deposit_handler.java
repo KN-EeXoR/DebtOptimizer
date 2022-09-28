@@ -7,16 +7,17 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class Debt_handler {
+public class Deposit_handler {
 
     private List<Deposit> list_of_debt;
     private double income;
     private double my_account;
     private List<Debt> list_of_paid_debt;
+    private int nuber_of_debts;
     /**
      * @param income How much money we can spend evry month to pay off debts
      */
-    Debt_handler(double income){
+    Deposit_handler(double income){
         list_of_debt = new ArrayList<>();
         list_of_paid_debt = new ArrayList<>();
         this.income = income;
@@ -31,6 +32,7 @@ public class Debt_handler {
             index = index*(-1) -1;
         }
         list_of_debt.add(index, your_debt);
+        this.nuber_of_debts++;
     }
     public void add_investment(Investment inv){
         int index = Collections.binarySearch(list_of_debt, inv );
@@ -52,6 +54,7 @@ public class Debt_handler {
             index = index*(-1) -1;
         }
         list_of_debt.add(index, your_debt);
+        this.nuber_of_debts++;
     }
     /** Adding debt to your list of debts
      * @param name Distinguishable name which describes the debt
@@ -65,6 +68,7 @@ public class Debt_handler {
             index = index*(-1) -1;
         }
         list_of_debt.add(index, your_debt);
+        this.nuber_of_debts++;
     }
     /** Return amount of unpaid debts
      * @return 
@@ -88,7 +92,7 @@ public class Debt_handler {
     /**
      * It reduces your debts by a monthly increase in an optimal way and calculates the receipts if the debts have been repaid
      */
-    public void evaluate_income(){
+    public int evaluate_income(int year){
         double money = income + my_account;
         for (Deposit debt : list_of_debt) {
             if (debt instanceof Debt){
@@ -99,19 +103,24 @@ public class Debt_handler {
         }
         if (money < 0){
             System.out.println("Not enough money to pay minimal payment");
-            return;
+            return - 1;
         }
+        int paid = 0;
         for (int i = 0; i < list_of_debt.size(); i++) {
             money = list_of_debt.get(i).pay(money);
             if( list_of_debt.get(i) instanceof Debt && ((Debt) list_of_debt.get(i)).to_be_repaid() == 0){
+                ((Debt) list_of_debt.get(i)).year_of_repayment(year);
                 list_of_paid_debt.add((Debt) list_of_debt.get(i));
                 list_of_debt.remove(i);
+                this.nuber_of_debts--;
+                paid++;
                 i--;
             }
             if(money == 0)
                 break;
         }
         my_account = money;
+        return paid;
     }
     /**
      * Calculates the increase in our debts
@@ -139,13 +148,13 @@ public class Debt_handler {
     public class DepInfo{
         public String name;
         public double[] numbers = new double[3];
-        public boolean Debt_T_Inves_F;
+        public boolean Debt_True_Inves_False;
         @Override
         public String toString() {
-            if(Debt_T_Inves_F){
+            if(Debt_True_Inves_False){
                 return "Debt " + this.name + " to pay " + this.numbers[0] + " with interest " + this.numbers[1] +"% at minimum payment " +this.numbers[2];
             }else{
-                return "Investment " +this.name + " transferred " + this.numbers[0] + " with interest " + this.numbers[1] +"% with maxim at " +this.numbers[2];
+                return "Investment " +this.name + " income " + this.numbers[0] + " with interest " + this.numbers[1] +"% with maxim at " +this.numbers[2];
             }
         }
     }
@@ -165,14 +174,14 @@ public class Debt_handler {
                 data[i].numbers[0] =  debt.to_be_repaid();
                 data[i].numbers[1] = debt.interest();
                 data[i].numbers[2] = debt.min_paymanet();
-                data[i].Debt_T_Inves_F = true;
+                data[i].Debt_True_Inves_False = true;
             }else{
                 inv = (Investment)list_of_debt.get(i);
                 data[i].name = inv.name();
-                data[i].numbers[0] =  inv.what_transferred();
+                data[i].numbers[0] =  inv.earned();
                 data[i].numbers[1] = inv.interest();
                 data[i].numbers[2] = inv.max_pay();
-                data[i].Debt_T_Inves_F = false;
+                data[i].Debt_True_Inves_False = false;
             }
            
         }
@@ -189,25 +198,55 @@ public class Debt_handler {
         }
         return data;
     }
-    /** calculates our account balance after years
-     * @param years the number of years to elapse
-     * @return our account balance after these years
-     */
-    public double after_years(int years){
-        for (int i = 0; i < years; i++) {
-            for (int j = 0; j < 12; j++) {
-                evaluate_income();
-            }
-            charge_interest();
-            payout_investment();
-        }
+    public double in_debt(){
         double result = 0;
         for (Deposit debt : list_of_debt) {
             if (debt instanceof Debt){
                 result += ((Debt)debt).to_be_repaid();
             }
         }
-        return my_account - result;
+        return result;
+    }
+    public void paid_debt_info(){
+
+    }
+    /** calculates our account balance after years
+     * @param years the number of years to elapse
+     * @return our account balance after these years
+     */
+    public void after_years(int years){
+        int year = 0;
+        int paid;
+        int i = 0;
+        int index;
+        print_all_debts_info();
+        System.out.println();
+        while(nuber_of_debts>0){
+            paid = evaluate_income(year);
+            charge_interest();
+            payout_investment();
+            year++;
+            for (i = 0; i < paid; i++) {
+                index = list_of_paid_debt.size() - 1;
+                System.out.println(list_of_paid_debt.get(index).toString_paid());
+                index--;
+            }
+            if (i>0){
+                i = 0;
+                print_all_debts_info();
+                System.out.println();
+            }
+             
+            
+        }
+        while(year<years){
+            evaluate_income(year);
+            charge_interest();
+            payout_investment();
+            year++;
+        } 
+        print_all_debts_info();
+        System.out.println("you end with "+ (my_account - in_debt())+ " money after " + year + " years");
     }
 
 }

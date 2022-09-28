@@ -13,6 +13,8 @@ public class Debt extends Deposit  {
     
     private double debt;
     private double min_pay;
+    private double paid;
+    private int year;
 
     /**
      * @param name Distinguishable name which describes the debt
@@ -25,6 +27,8 @@ public class Debt extends Deposit  {
         this.name = name;
         this.debt = debt;
         this.interest = interest;
+        this.paid = 0;
+        this.year = -1;
         this.min_pay = round_decimal(this.min_pay);
     }
     /**
@@ -33,9 +37,11 @@ public class Debt extends Deposit  {
      * @param interest annual increase in the amount
      */
     public Debt(String name, double debt, double interest) {
-        this.min_pay = (debt - (debt /(interest+1)))/12;
+        this.min_pay = (debt - (debt /(interest+1)));
         this.name = name;
         this.debt = debt;
+        this.paid = 0;
+        this.year = -1;
         this.interest = interest;
         this.min_pay = round_decimal(this.min_pay);
     }
@@ -44,10 +50,12 @@ public class Debt extends Deposit  {
      * @return the rest of the money we have left
      */
     public double pay(double money){
+        this.paid += money;
         this.debt -= money;
         if(this.debt <0){
             double wynik = this.debt * -1;
             this.debt = 0;
+            this.paid -= wynik;
             return wynik;
         }
         return 0;
@@ -71,10 +79,21 @@ public class Debt extends Deposit  {
     public double min_paymanet(){
         return this.min_pay;
     }
-    
+    public void year_of_repayment(int year){
+        this.year = year;
+    }
+    public double get_repaid_money(){
+        return this.paid;
+    }
+    public int get_repayment_year(){
+        return this.year;
+    }
     @Override
     public String toString() {
         return this.name + " to pay " + this.debt + " with interest " + this.interest +"% at minimum payment " +this.min_pay;
+    }
+    public String toString_paid(){
+        return this.name + " paid of "+ this.year +" year, paid in total " + this.paid + " with interest " + this.interest +"% at minimum payment " +this.min_pay;
     }
     
 }
