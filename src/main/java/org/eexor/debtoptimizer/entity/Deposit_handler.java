@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class Deposit_handler {
 
-    private List<Deposit> list_of_debt;
+    private List<Deposit> list_of_deposit;
     private double income;
     private double my_account;
     private List<Debt> list_of_paid_debt;
@@ -18,7 +18,7 @@ public class Deposit_handler {
      * @param income How much money we can spend evry month to pay off debts
      */
     Deposit_handler(double income){
-        list_of_debt = new ArrayList<>();
+        list_of_deposit = new ArrayList<>();
         list_of_paid_debt = new ArrayList<>();
         this.income = income;
         my_account = 0;
@@ -27,19 +27,19 @@ public class Deposit_handler {
      * @param your_debt object of class Debt
      */
     public void add_debt(Debt your_debt){
-        int index = Collections.binarySearch(list_of_debt, your_debt);
+        int index = Collections.binarySearch(list_of_deposit, your_debt);
         if (index<0){
             index = index*(-1) -1;
         }
-        list_of_debt.add(index, your_debt);
+        list_of_deposit.add(index, your_debt);
         this.nuber_of_debts++;
     }
     public void add_investment(Investment inv){
-        int index = Collections.binarySearch(list_of_debt, inv );
+        int index = Collections.binarySearch(list_of_deposit, inv );
         if (index<0){
             index = index*(-1) -1;
         }
-        list_of_debt.add(index, inv);
+        list_of_deposit.add(index, inv);
     }
     /** Adding debt to your list of debts
      * @param name Distinguishable name which describes the debt
@@ -49,11 +49,11 @@ public class Deposit_handler {
      */
     public void add_debt(String name, double debt, double interest, double min_paymanet){
         Debt your_debt = new Debt(name, debt, interest, min_paymanet);
-        int index = Collections.binarySearch(list_of_debt, your_debt);
+        int index = Collections.binarySearch(list_of_deposit, your_debt);
         if (index<0){
             index = index*(-1) -1;
         }
-        list_of_debt.add(index, your_debt);
+        list_of_deposit.add(index, your_debt);
         this.nuber_of_debts++;
     }
     /** Adding debt to your list of debts
@@ -63,18 +63,18 @@ public class Deposit_handler {
      */
     public void add_debt(String name, double debt, double interest){
         Debt your_debt = new Debt(name, debt, interest);
-        int index = Collections.binarySearch(list_of_debt, your_debt);
+        int index = Collections.binarySearch(list_of_deposit, your_debt);
         if (index<0){
             index = index*(-1) -1;
         }
-        list_of_debt.add(index, your_debt);
+        list_of_deposit.add(index, your_debt);
         this.nuber_of_debts++;
     }
     /** Return amount of unpaid debts
      * @return 
      */
-    public int nuber_of_debts(){
-        return list_of_debt.size();
+    public int number_of_deposit(){
+        return list_of_deposit.size();
     }
     /** Changes the current monthly income to the given one
      * @param income 
@@ -87,14 +87,14 @@ public class Deposit_handler {
      * @return
      */
     public String get_debt_info(int index){
-        return list_of_debt.get(index).toString();
+        return list_of_deposit.get(index).toString();
     }
     /**
      * It reduces your debts by a monthly increase in an optimal way and calculates the receipts if the debts have been repaid
      */
     public int evaluate_income(int year){
         double money = income + my_account;
-        for (Deposit debt : list_of_debt) {
+        for (Deposit debt : list_of_deposit) {
             if (debt instanceof Debt){
                 debt.pay(((Debt)debt).min_paymanet());
                 money -= ((Debt)debt).min_paymanet();
@@ -106,12 +106,12 @@ public class Deposit_handler {
             return - 1;
         }
         int paid = 0;
-        for (int i = 0; i < list_of_debt.size(); i++) {
-            money = list_of_debt.get(i).pay(money);
-            if( list_of_debt.get(i) instanceof Debt && ((Debt) list_of_debt.get(i)).to_be_repaid() == 0){
-                ((Debt) list_of_debt.get(i)).year_of_repayment(year);
-                list_of_paid_debt.add((Debt) list_of_debt.get(i));
-                list_of_debt.remove(i);
+        for (int i = 0; i < list_of_deposit.size(); i++) {
+            money = list_of_deposit.get(i).pay(money);
+            if( list_of_deposit.get(i) instanceof Debt && ((Debt) list_of_deposit.get(i)).to_be_repaid() == 0){
+                ((Debt) list_of_deposit.get(i)).year_of_repayment(year);
+                list_of_paid_debt.add((Debt) list_of_deposit.get(i));
+                list_of_deposit.remove(i);
                 this.nuber_of_debts--;
                 paid++;
                 i--;
@@ -126,12 +126,12 @@ public class Deposit_handler {
      * Calculates the increase in our debts
      */
     public void charge_interest(){
-        for (Deposit debt : list_of_debt) {
+        for (Deposit debt : list_of_deposit) {
             debt.charge_interest();
         }
     }
     public void payout_investment(){
-        for (Deposit deposit : list_of_debt) {
+        for (Deposit deposit : list_of_deposit) {
             if(deposit instanceof Investment){
                 my_account += ((Investment)deposit).payout();
             }
@@ -141,7 +141,7 @@ public class Deposit_handler {
      * Prints a String which contains information about unpaid debts
      */
     public void print_all_debts_info(){
-        for (Deposit debt : list_of_debt) {
+        for (Deposit debt : list_of_deposit) {
             System.out.println(debt.toString());
         }
     }
@@ -161,46 +161,45 @@ public class Deposit_handler {
     /** returns an array that contains information about unpaid debts
      * @return returns a two-dimensional array where one row corresponds to one debt, each row has three columns with the respective: amount of debt, increase, minimum payment 
      */
-    public DepInfo[] get_all_debts_info(){
-        int size = this.list_of_debt.size();
-        DepInfo data[] = new DepInfo[size];
-        Debt debt;
-        Investment inv;
-        for (int i =0 ; i<size; i++) {
-            data[i] =  new DepInfo();
-            if(list_of_debt.get(i)instanceof Debt){
-                debt = (Debt)list_of_debt.get(i);
-                data[i].name = debt.name();
-                data[i].numbers[0] =  debt.to_be_repaid();
-                data[i].numbers[1] = debt.interest();
-                data[i].numbers[2] = debt.min_paymanet();
-                data[i].Debt_True_Inves_False = true;
+    
+
+    public class current_info{
+        public Debt remaining_debt[];
+        public Investment investment[]; 
+        public Debt paidoff[];
+       
+    }
+    public current_info get_current_info(){
+        current_info info = new current_info();
+        info.remaining_debt = new Debt[nuber_of_debts];
+        info.investment = new Investment[number_of_deposit()-nuber_of_debts];
+        int i =0 , j =0;
+        for (Deposit deposit : list_of_deposit) {
+            if(deposit instanceof Debt){
+                info.remaining_debt[i] = (Debt) deposit;
+                i++;
             }else{
-                inv = (Investment)list_of_debt.get(i);
-                data[i].name = inv.name();
-                data[i].numbers[0] =  inv.earned();
-                data[i].numbers[1] = inv.interest();
-                data[i].numbers[2] = inv.max_pay();
-                data[i].Debt_True_Inves_False = false;
+                info.investment[j] = (Investment) deposit;
+                j++;
             }
-           
         }
-        return data;
+        info.paidoff =  list_of_paid_debt.toArray(new Debt[0]);
+        return info;
     }
     /** returns an array that contains information about unpaid debts
      * @return returns a array with names of debst
      */
     public String[] get_table_with_all_debts_name_info(){
-        int size = this.list_of_debt.size();
+        int size = this.list_of_deposit.size();
         String data[] = new String[size];
         for (int i =0 ; i<size; i++) {
-            data[i] = this.list_of_debt.get(i).name();
+            data[i] = this.list_of_deposit.get(i).name();
         }
         return data;
     }
     public double in_debt(){
         double result = 0;
-        for (Deposit debt : list_of_debt) {
+        for (Deposit debt : list_of_deposit) {
             if (debt instanceof Debt){
                 result += ((Debt)debt).to_be_repaid();
             }
@@ -221,7 +220,7 @@ public class Deposit_handler {
         int index;
         print_all_debts_info();
         System.out.println();
-        while(nuber_of_debts>0){
+        while(nuber_of_debts>0 && year<years){
             paid = evaluate_income(year);
             charge_interest();
             payout_investment();
