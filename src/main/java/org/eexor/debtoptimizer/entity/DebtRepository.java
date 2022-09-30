@@ -9,7 +9,7 @@ public class DebtRepository {
     private final Map<Integer, Debt> liabilities = new TreeMap<>();
 
     public int getNextId() {
-        return liabilities.keySet().size();
+        return liabilities.keySet().stream().max(Comparator.comparingInt(k -> k)).orElse(-1) + 1;
     }
 
     public List<Debt> getAll() {
