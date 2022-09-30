@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
 import lombok.Data;
 
 @Data
@@ -14,6 +17,7 @@ public class Deposit_handler {
     private double my_account;
     private List<Debt> list_of_paid_debt;
     private int nuber_of_debts;
+    private int year = 0;
     /**
      * @param income How much money we can spend evry month to pay off debts
      */
@@ -22,6 +26,7 @@ public class Deposit_handler {
         list_of_paid_debt = new ArrayList<>();
         this.income = income;
         my_account = 0;
+        year = 0;
     }
     /** Adding debt to your list of debts
      * @param your_debt object of class Debt
@@ -189,14 +194,7 @@ public class Deposit_handler {
     /** returns an array that contains information about unpaid debts
      * @return returns a array with names of debst
      */
-    public String[] get_table_with_all_debts_name_info(){
-        int size = this.list_of_deposit.size();
-        String data[] = new String[size];
-        for (int i =0 ; i<size; i++) {
-            data[i] = this.list_of_deposit.get(i).name();
-        }
-        return data;
-    }
+    
     public double in_debt(){
         double result = 0;
         for (Deposit debt : list_of_deposit) {
@@ -214,7 +212,7 @@ public class Deposit_handler {
      * @return our account balance after these years
      */
     public void after_years(int years){
-        int year = 0;
+        years += year;
         int paid;
         int i = 0;
         int index;
@@ -246,6 +244,21 @@ public class Deposit_handler {
         } 
         print_all_debts_info();
         System.out.println("you end with "+ (my_account - in_debt())+ " money after " + year + " years");
+    }
+    public current_info pay_next_debt(){
+        int paid = 0;
+        while(nuber_of_debts>0 && paid == 0){
+            paid = evaluate_income(year);
+            charge_interest();
+            payout_investment();
+            year++;
+             
+            
+        }
+        return get_current_info();
+    }
+    public JsonElement to_JSON(current_info info){
+        return new Gson().toJsonTree(info);
     }
 
 }
