@@ -13,36 +13,36 @@ public class RepositoryController {
 
     @GetMapping("/getDebts")
     public List<Debt> getDebts() {
-        return debtRepository.getAll();
+        return (List<Debt>)debtRepository.findAll();
     }
 
     @GetMapping("/getDebt/{id}")
-    public Debt getById(@PathVariable("id") int id) {
-        return debtRepository.getDebt(id);
+    public Debt getById(@PathVariable("id") long id) {
+        return debtRepository.findById(id).orElse(null);
     }
 
     @PostMapping("/addDebt")
     public void addDebt(@RequestBody Debt debt) {
-        debtRepository.addDebt(debt);
+        debtRepository.save(debt);
     }
 
     @PostMapping("/addDebts")
     public void addDebts(@RequestBody List<Debt> debtList) {
-        debtRepository.addDebts(debtList);
+        debtRepository.saveAll(debtList);
     }
 
     @PostMapping("/removeDebt/{id}")
     public void removeDebt(
-            @PathVariable("id") int id) {
-        debtRepository.removeDebt(id);
+            @PathVariable("id") long id) {
+        debtRepository.deleteById(id);
     }
 
     @PutMapping("/updateDebt/{id}")
     public void modifyDebt(
-            @PathVariable("id") int id,
-            @RequestBody Debt newDebt) {
-        Debt foundDebt = debtRepository.getDebt(id);
-        if (foundDebt != null)
-            debtRepository.updateDebt(id, newDebt);
+            @PathVariable("id") long id,
+            @RequestBody double debt) {
+        Debt foundDebt = debtRepository.findById(id).orElse(null);
+        foundDebt.setDebt(debt);
+        debtRepository.save(foundDebt);
     }
 }

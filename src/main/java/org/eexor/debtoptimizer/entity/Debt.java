@@ -1,20 +1,32 @@
 package org.eexor.debtoptimizer.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "DEBT")
 public class Debt implements Comparable<Debt> {
-    private int id = -1;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id = -1;
+
+    @Column(name = "DESCRIPTION", length = 50, nullable = false)
     private String name;
-    private double debt;
-    private double interest;
-    private double min_pay;
+    @Column(name = "AMOUNT", nullable = false)
+    private Double debt;
+
+    @Column(name = "INTEREST", nullable = false)
+    private Double interest;
+
+    @Column(name = "MINIMUM_MONTHLY_PAY", nullable = false)
+    private Double min_pay;
 
     /**
      * @param name Distinguishable name which describes the debt
@@ -49,7 +61,7 @@ public class Debt implements Comparable<Debt> {
         this.debt -= money;
         if(this.debt <0){
             double wynik = this.debt * -1;
-            this.debt = 0;
+            this.debt = Double.valueOf(0);
             return wynik;
         }
         return 0;
