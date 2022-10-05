@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serial;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +15,8 @@ import javax.persistence.*;
 @Table(name = "DEBT")
 public class Debt implements Comparable<Debt> {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Serial
     private long id = -1;
 
     @Column(name = "DESCRIPTION", length = 50, nullable = false)
