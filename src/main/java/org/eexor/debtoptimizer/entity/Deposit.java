@@ -31,12 +31,12 @@ public abstract class Deposit implements Comparable<Deposit> {
     @Column(name = "INTEREST_RATE", nullable = false)
     protected Double interestRate;
 
-    protected double rounddecimal(double number){
+    protected double roundDecimal(double number){
         return (double)Math.round(number*100)/100;
     }
 
     abstract public double pay(double money);
-    abstract public void chargeinterest();
+    abstract public void chargeInterest();
     @Override
     public int hashCode() {
         return this.name.hashCode();

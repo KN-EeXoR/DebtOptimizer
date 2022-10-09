@@ -43,9 +43,9 @@ public class Investment extends Deposit {
         }
         return 0;
     }
-    public void chargeinterest(){
+    public void chargeInterest(){
         transferred *=(this.interestRate +1);
-        transferred = rounddecimal(transferred);
+        transferred = roundDecimal(transferred);
     }
     public double earned(){
         return this.earned;
