@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @Data
@@ -63,7 +62,7 @@ public class Debt extends Deposit {
     public double pay(double money){
         this.repaidMoney += money;
         this.amountOfDebt -= money;
-        if (this.amountOfDebt < 0) {
+        if(this.amountOfDebt <0){
             double result = this.amountOfDebt * -1;
             this.amountOfDebt = 0.0;
             this.repaidMoney -= result;
@@ -74,7 +73,7 @@ public class Debt extends Deposit {
     /**
      * increase in debt
      */
-    public void chargeInterest() {
+    public void chargeInterest(){
         this.amountOfDebt += this.amountOfDebt * this.interestRate;
         this.amountOfDebt = roundDecimal(this.amountOfDebt);
     }
@@ -83,7 +82,7 @@ public class Debt extends Deposit {
     public String toString() {
         return this.name + " to pay " + this.amountOfDebt + " with interest " + this.interestRate +"% at minimum payment " +this.minimumMonthlyPayment;
     }
-    public String toString_paid() {
+    public String toStringPaid() {
         return this.name + " paid of " + this.yearOfRepayment + " year, paid in total " + this.repaidMoney + " with interest " + this.interestRate + "% at minimum payment " + this.minimumMonthlyPayment;
     }
 }
