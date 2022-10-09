@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-public interface ControllerBase<T> {
+public interface ProductControllerBase<T> {
     List<T> getAll();
     T getById(@PathVariable("id") long id);
     void add(@RequestBody T t);

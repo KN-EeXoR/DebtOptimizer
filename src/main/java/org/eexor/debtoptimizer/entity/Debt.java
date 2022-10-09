@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Data
@@ -39,7 +40,7 @@ public class Debt extends Deposit {
         this.interestRate = interest;
         this.repaidMoney = 0.0;
         this.yearOfRepayment = -1;
-        this.minimumMonthlyPayment = round_decimal(this.minimumMonthlyPayment);
+        this.minimumMonthlyPayment = roundDecimal(this.minimumMonthlyPayment);
     }
     /**
      * @param name Distinguishable name which describes the debt
@@ -53,7 +54,7 @@ public class Debt extends Deposit {
         this.repaidMoney = 0.0;
         this.yearOfRepayment = -1;
         this.interestRate = interest;
-        this.minimumMonthlyPayment = round_decimal(this.minimumMonthlyPayment);
+        this.minimumMonthlyPayment = roundDecimal(this.minimumMonthlyPayment);
     }
     /** It reduces debt
      * @param money the amount of money we can spend
@@ -62,7 +63,7 @@ public class Debt extends Deposit {
     public double pay(double money){
         this.repaidMoney += money;
         this.amountOfDebt -= money;
-        if(this.amountOfDebt <0){
+        if (this.amountOfDebt < 0) {
             double result = this.amountOfDebt * -1;
             this.amountOfDebt = 0.0;
             this.repaidMoney -= result;
@@ -73,9 +74,9 @@ public class Debt extends Deposit {
     /**
      * increase in debt
      */
-    public void charge_interest(){
+    public void chargeInterest() {
         this.amountOfDebt += this.amountOfDebt * this.interestRate;
-        this.amountOfDebt = round_decimal(this.amountOfDebt);
+        this.amountOfDebt = roundDecimal(this.amountOfDebt);
     }
 
     @Override

@@ -25,18 +25,18 @@ public abstract class Deposit implements Comparable<Deposit> {
     @Version
     private Integer version = 0;
 
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "NAME", nullable = false, unique = true)
     protected String name;
 
     @Column(name = "INTEREST_RATE", nullable = false)
     protected Double interestRate;
 
-    protected double round_decimal(double number){
+    protected double roundDecimal(double number){
         return (double)Math.round(number*100)/100;
     }
 
     abstract public double pay(double money);
-    abstract public void charge_interest();
+    abstract public void chargeInterest();
     @Override
     public int hashCode() {
         return this.name.hashCode();

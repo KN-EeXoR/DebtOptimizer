@@ -9,10 +9,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/debt")
-public class DebtController implements ControllerBase<Debt> {
-
+public class DebtController implements ProductControllerBase<Debt> {
+    private final DebtRepository debtRepository;
     @Autowired
-    DebtRepository debtRepository;
+    public DebtController(DebtRepository debtRepository) {
+        this.debtRepository = debtRepository;
+    }
 
     @GetMapping("/getAll")
     public List<Debt> getAll() {

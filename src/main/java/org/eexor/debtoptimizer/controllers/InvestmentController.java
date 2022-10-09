@@ -9,10 +9,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/investment")
-public class InvestmentController implements ControllerBase<Investment> {
+public class InvestmentController implements ProductControllerBase<Investment> {
+
+    private final InvestmentRepository investmentRepository;
 
     @Autowired
-    InvestmentRepository investmentRepository;
+    public InvestmentController(InvestmentRepository investmentRepository) {
+        this.investmentRepository = investmentRepository;
+    }
 
     @GetMapping("/getAll")
     public List<Investment> getAll() {
