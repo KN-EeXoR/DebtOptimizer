@@ -1,6 +1,8 @@
 package org.eexor.debtoptimizer.controllers;
 
 import org.eexor.debtoptimizer.entity.Deposit;
+import org.eexor.debtoptimizer.repositories.DepositRepository;
+import org.eexor.debtoptimizer.service.CurrentInfo;
 import org.eexor.debtoptimizer.service.DepositHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +13,12 @@ import java.util.List;
 @RequestMapping("/manager")
 public class AccountController {
 
+    private final DepositRepository depositRepository;
     private final DepositHandler depositHandler;
 
     @Autowired
-    public AccountController(DepositHandler depositHandler) {
+    public AccountController(DepositRepository depositRepository, DepositHandler depositHandler) {
+        this.depositRepository = depositRepository;
         this.depositHandler = depositHandler;
     }
 
@@ -25,7 +29,12 @@ public class AccountController {
 
     @GetMapping("/getAllDeposits")
     public List<Deposit> getAll() {
-        return depositHandler.getAllDeposits();
+        return (List<Deposit>)depositRepository.findAll();
+    }
+
+    @GetMapping("/payNextDebt")
+    public CurrentInfo payNextDebt() {
+        return depositHandler.payNextDebt();
     }
 
 }

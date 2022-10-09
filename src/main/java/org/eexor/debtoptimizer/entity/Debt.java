@@ -12,6 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "DEBT")
+@PrimaryKeyJoinColumn(name = "id")
 public class Debt extends Deposit {
 
     @Column(name = "AMOUNT_OF_DEBT", nullable = false)
@@ -25,6 +26,7 @@ public class Debt extends Deposit {
 
     @Column(name = "YEAR_OF_REPAYMENT")
     private Integer yearOfRepayment;
+
 
     /**
      * @param name Distinguishable name which describes the debt

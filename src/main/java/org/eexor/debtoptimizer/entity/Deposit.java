@@ -8,6 +8,9 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Data
+@Entity
+@Table(name = "DEPOSIT")
+@Inheritance(strategy = InheritanceType.JOINED)
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         property = "type"
@@ -16,7 +19,6 @@ import java.util.Objects;
         @JsonSubTypes.Type(value = Debt.class, name = "debt"),
         @JsonSubTypes.Type(value = Investment.class, name = "investment")
 })
-@MappedSuperclass
 public abstract class Deposit implements Comparable<Deposit> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,6 +32,9 @@ public abstract class Deposit implements Comparable<Deposit> {
 
     @Column(name = "INTEREST_RATE", nullable = false)
     protected Double interestRate;
+
+    @Column(name = "IS_ACTIVE", nullable = false)
+    protected Boolean isActive = true;
 
     protected double roundDecimal(double number){
         return (double)Math.round(number*100)/100;

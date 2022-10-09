@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Data
@@ -13,6 +14,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Entity
 @Table(name = "INVESTMENT")
+@PrimaryKeyJoinColumn(name = "id")
 public class Investment extends Deposit {
 
     @Column(name = "TRANSFERRED")
