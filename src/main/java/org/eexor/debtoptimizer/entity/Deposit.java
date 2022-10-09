@@ -1,31 +1,40 @@
 package org.eexor.debtoptimizer.entity;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.Data;
+
+import javax.persistence.*;
+import java.util.Objects;
+
+@Data
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Debt.class, name = "debt"),
+        @JsonSubTypes.Type(value = Investment.class, name = "investment")
+})
+@MappedSuperclass
 public abstract class Deposit implements Comparable<Deposit> {
-    protected int id = -1;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    protected Long id = (long) -1;
+
+    @Version
+    private Integer version = 0;
+
+    @Column(name = "NAME", nullable = false)
     protected String name;
-    protected double interest;
+
+    @Column(name = "INTEREST_RATE", nullable = false)
+    protected Double interestRate;
 
     protected double round_decimal(double number){
         return (double)Math.round(number*100)/100;
     }
-    /** Returns the increment of debt
-     * @return
-     */
-    public double interest(){
-        return this.interest;
-    }
-    /** Returns the name of the debt
-     * @return 
-     */
-    public String name(){
-        return this.name;
-    }
-    public void setId(int id){
-        this.id = id;
-    }
-    public int getId(){
-        return this.id;
-    }
+
     abstract public double pay(double money);
     abstract public void charge_interest();
     @Override
@@ -34,13 +43,12 @@ public abstract class Deposit implements Comparable<Deposit> {
     }
     @Override
     public boolean equals(Object obj) {
-        
-        return this.name == ((Deposit)obj).name;
+        return Objects.equals(this.name, ((Deposit) obj).name);
     }
     
     @Override
     public int compareTo(Deposit o) {
-        return Double.compare(o.interest, this.interest);
+        return Double.compare(o.interestRate, this.interestRate);
     }
     @Override
     abstract public String toString();

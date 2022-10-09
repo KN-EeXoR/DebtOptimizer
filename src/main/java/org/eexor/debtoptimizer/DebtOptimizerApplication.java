@@ -1,15 +1,9 @@
 package org.eexor.debtoptimizer;
 
-import org.eexor.debtoptimizer.entity.*;
-import org.eexor.debtoptimizer.entity.Debt;
-import org.eexor.debtoptimizer.entity.DebtRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages={"org.eexor.debtoptimizer"})
 public class DebtOptimizerApplication {
 
     public static void main(String[] args) {

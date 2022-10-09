@@ -1,4 +1,4 @@
-package org.eexor.debtoptimizer.entity;
+package org.eexor.debtoptimizer.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,6 +8,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
 import lombok.Data;
+import org.eexor.debtoptimizer.entity.Debt;
+import org.eexor.debtoptimizer.entity.Deposit;
+import org.eexor.debtoptimizer.entity.Investment;
 
 @Data
 public class Deposit_handler {
@@ -101,8 +104,8 @@ public class Deposit_handler {
         double money = income + my_account;
         for (Deposit debt : list_of_deposit) {
             if (debt instanceof Debt){
-                debt.pay(((Debt)debt).min_paymanet());
-                money -= ((Debt)debt).min_paymanet();
+                debt.pay(((Debt)debt).getMinimumMonthlyPayment());
+                money -= ((Debt)debt).getMinimumMonthlyPayment();
             }
             
         }
@@ -113,8 +116,8 @@ public class Deposit_handler {
         int paid = 0;
         for (int i = 0; i < list_of_deposit.size(); i++) {
             money = list_of_deposit.get(i).pay(money);
-            if( list_of_deposit.get(i) instanceof Debt && ((Debt) list_of_deposit.get(i)).to_be_repaid() == 0){
-                ((Debt) list_of_deposit.get(i)).year_of_repayment(year);
+            if( list_of_deposit.get(i) instanceof Debt && ((Debt) list_of_deposit.get(i)).getAmountOfDebt() == 0){
+                ((Debt) list_of_deposit.get(i)).setYearOfRepayment(year);
                 list_of_paid_debt.add((Debt) list_of_deposit.get(i));
                 list_of_deposit.remove(i);
                 this.nuber_of_debts--;
@@ -199,7 +202,7 @@ public class Deposit_handler {
         double result = 0;
         for (Deposit debt : list_of_deposit) {
             if (debt instanceof Debt){
-                result += ((Debt)debt).to_be_repaid();
+                result += ((Debt)debt).getAmountOfDebt();
             }
         }
         return result;
