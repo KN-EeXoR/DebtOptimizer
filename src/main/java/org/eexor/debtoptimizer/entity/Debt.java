@@ -39,7 +39,7 @@ public class Debt extends Deposit {
         this.interestRate = interest;
         this.repaidMoney = 0.0;
         this.yearOfRepayment = -1;
-        this.minimumMonthlyPayment = round_decimal(this.minimumMonthlyPayment);
+        this.minimumMonthlyPayment = rounddecimal(this.minimumMonthlyPayment);
     }
     /**
      * @param name Distinguishable name which describes the debt
@@ -53,7 +53,7 @@ public class Debt extends Deposit {
         this.repaidMoney = 0.0;
         this.yearOfRepayment = -1;
         this.interestRate = interest;
-        this.minimumMonthlyPayment = round_decimal(this.minimumMonthlyPayment);
+        this.minimumMonthlyPayment = rounddecimal(this.minimumMonthlyPayment);
     }
     /** It reduces debt
      * @param money the amount of money we can spend
@@ -73,16 +73,16 @@ public class Debt extends Deposit {
     /**
      * increase in debt
      */
-    public void charge_interest(){
+    public void chargeinterest(){
         this.amountOfDebt += this.amountOfDebt * this.interestRate;
-        this.amountOfDebt = round_decimal(this.amountOfDebt);
+        this.amountOfDebt = rounddecimal(this.amountOfDebt);
     }
 
     @Override
     public String toString() {
         return this.name + " to pay " + this.amountOfDebt + " with interest " + this.interestRate +"% at minimum payment " +this.minimumMonthlyPayment;
     }
-    public String toString_paid() {
+    public String toStringpaid() {
         return this.name + " paid of " + this.yearOfRepayment + " year, paid in total " + this.repaidMoney + " with interest " + this.interestRate + "% at minimum payment " + this.minimumMonthlyPayment;
     }
 }

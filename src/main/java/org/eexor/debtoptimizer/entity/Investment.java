@@ -22,12 +22,12 @@ public class Investment extends Deposit {
     private Double earned;
 
     @Column(name = "MAX_PAY")
-    private Double max_pay;
+    private Double maxpay;
 
-    public Investment(String name, double interest, double max_pay) {
+    public Investment(String name, double interest, double maxpay) {
         this.name = name;
         this.interestRate = interest;
-        this.max_pay  = max_pay;
+        this.maxpay  = maxpay;
         transferred = 0.0;
     }
     /** It reduces debt
@@ -36,16 +36,16 @@ public class Investment extends Deposit {
      */
     public double pay(double money){
         this.transferred += money;
-        if(this.transferred > this.max_pay){
-            double result = this.transferred -this.max_pay;
-            this.transferred = this.max_pay;
+        if(this.transferred > this.maxpay){
+            double result = this.transferred -this.maxpay;
+            this.transferred = this.maxpay;
             return result;
         }
         return 0;
     }
-    public void charge_interest(){
+    public void chargeinterest(){
         transferred *=(this.interestRate +1);
-        transferred = round_decimal(transferred);
+        transferred = rounddecimal(transferred);
     }
     public double earned(){
         return this.earned;
@@ -58,7 +58,7 @@ public class Investment extends Deposit {
     }
     @Override
     public String toString() {
-        return this.name + " earned " + this.earned + " with interest " + this.interestRate +"% with maxim at " +this.max_pay;
+        return this.name + " earned " + this.earned + " with interest " + this.interestRate +"% with maxim at " +this.maxpay;
     }
     
     
